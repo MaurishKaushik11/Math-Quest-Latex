@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "source_pdf": "C:\\Users\\HP\\Downloads\\RD-SHARMA CLASS 12TH VOLUME 2 MCQS (R.D.SHARMA) (Z-Library).pdf",
+    "extraction_date": "2025-08-08T22:44:25.693733",
+    "total_mcq_questions": 1,
+    "extraction_method": "refined_pattern_matching"
+  },
+  "statistics": {
+    "total_mcq_questions": 1,
+    "questions_per_chapter": {
+      "Probability": 1
+    },
+    "questions_per_difficulty": {
+      "Medium": 1
+    },
+    "questions_per_type": {
+      "Application": 1
+    },
+    "questions_with_formulas": 1,
+    "average_word_count": 38.0,
+    "average_options_per_question": 3.0,
+    "page_distribution": {
+      "5": 1
+    }
+  },
+  "mcq_questions": [
+    {
+      "id": "RDS_MCQ_5_31",
+      "number": "31",
+      "question_text": "MEAN AND VARIANCE OF A RANDOM VARIABLE 31.1-31.45 31.1 Introduction 31.1 31.2 Discrete random variable 31.1 31.3 Probability distribution 31.2 31.4 Mean of a discrete random variable 31.18 31.5 Variance of a discrete random variable 31.19 APPENDIX A.l-A.lO",
+      "options": [
+        {
+          "letter": "A",
+          "text": "l Introduction A.l"
+        },
+        {
+          "letter": "A",
+          "text": "2 Curve sketching A.l"
+        },
+        {
+          "letter": "A",
+          "text": "3 Sketching of some standard curves A.4"
+        }
+      ],
+      "page": 5,
+      "chapter": "Probability",
+      "topic": "Probability Theory",
+      "difficulty": "Medium",
+      "question_type": "Application",
+      "has_formula": true,
+      "word_count": 38,
+      "num_options": 3,
+      "full_block": "31. MEAN AND VARIANCE OF A RANDOM VARIABLE 31.1-31.45\n31.1 Introduction 31.1\n31.2 Discrete random variable 31.1\n31.3 Probability distribution 31.2\n31.4 Mean of a discrete random variable 31.18\n31.5 Variance of a discrete random variable 31.19\nAPPENDIX A.l-A.lO\nA.l Introduction A.l\nA.2 Curve sketching A.l\nA.3 Sketching of some standard curves A.4",
+      "extracted_at": "2025-08-08T22:44:25.634632"
+    }
+  ]
+}

@@ -1,21 +1,116 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-import { FileText, Download, Loader2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { FileText, Download, Loader2, Brain, Target, CheckCircle2, AlertTriangle, Sparkles, BookOpen, Calculator, Zap, Copy, Eye, Settings } from "lucide-react";
+
+interface ExtractedQuestion {
+  text: string;
+  type: string;
+  confidence: number;
+  page: number;
+}
+
+interface ExtractionResult {
+  success: boolean;
+  chapter: string;
+  total_questions_found: number;
+  high_confidence_questions: number;
+  estimated_accuracy: number;
+  latex_content: string;
+  questions: ExtractedQuestion[];
+  processing_info: {
+    pages_processed: number;
+    relevant_pages: number[];
+    timestamp: string;
+  };
+}
+
+interface ProcessingStage {
+  stage: string;
+  message: string;
+  completed: boolean;
+  icon: React.ReactNode;
+}
 
 const Index = () => {
-  const [pdfUrl, setPdfUrl] = useState("https://drive.google.com/uc?export=download&id=1wROmh1wpqTfbUTmh5PTxQYOD5r8QVmHN");
+  const [pdfUrl, setPdfUrl] = useState("https://drive.google.com/uc?export=download&id=1BQllRXh5_ID08uPTVfEe0DgmxPUm867F");
   const [chapterInput, setChapterInput] = useState("");
   const [extractedLatex, setExtractedLatex] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [extractionResult, setExtractionResult] = useState<ExtractionResult | null>(null);
+  const [apiKey, setApiKey] = useState("");
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
+  const [currentStage, setCurrentStage] = useState<string>("");
+  const [processingStages, setProcessingStages] = useState<ProcessingStage[]>([]);
+  const [previewMode, setPreviewMode] = useState<"latex" | "preview">("latex");
+  const latexRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
+
+  const initializeProcessingStages = () => {
+    const stages: ProcessingStage[] = [
+      {
+        stage: "initialization",
+        message: "Initializing RAG pipeline...",
+        completed: false,
+        icon: <Settings className="h-4 w-4" />
+      },
+      {
+        stage: "download",
+        message: "Downloading PDF document...",
+        completed: false,
+        icon: <FileText className="h-4 w-4" />
+      },
+      {
+        stage: "analysis",
+        message: "Analyzing document structure...",
+        completed: false,
+        icon: <Brain className="h-4 w-4" />
+      },
+      {
+        stage: "extraction",
+        message: "Extracting mathematical questions...",
+        completed: false,
+        icon: <Calculator className="h-4 w-4" />
+      },
+      {
+        stage: "formatting",
+        message: "Converting to LaTeX format...",
+        completed: false,
+        icon: <Sparkles className="h-4 w-4" />
+      },
+      {
+        stage: "validation",
+        message: "Validating and enhancing results...",
+        completed: false,
+        icon: <CheckCircle2 className="h-4 w-4" />
+      }
+    ];
+    setProcessingStages(stages);
+    return stages;
+  };
+
+  const updateStage = (stageName: string, completed: boolean = true) => {
+    setCurrentStage(stageName);
+    setProcessingStages(prev => 
+      prev.map(stage => 
+        stage.stage === stageName 
+          ? { ...stage, completed }
+          : stage
+      )
+    );
+  };
 
   const handleExtract = async () => {
     if (!chapterInput.trim()) {
@@ -27,39 +122,153 @@ const Index = () => {
       return;
     }
 
+    // Check if we should use the enhanced backend or fallback to mock
+    const backendUrl = "http://localhost:5000";
+    let useBackend = true;
+
+    // Test if backend is available
+    try {
+      await fetch(`${backendUrl}/api/health`, { method: 'GET' });
+    } catch {
+      useBackend = false;
+      toast({
+        title: "Backend Unavailable",
+        description: "Using mock data. Start the Python backend for real extraction.",
+        variant: "destructive",
+      });
+    }
+
     setIsProcessing(true);
     setProgress(0);
     setExtractedLatex("");
+    setExtractionResult(null);
+    const stages = initializeProcessingStages();
 
     try {
-      // Simulate processing steps
-      setProgress(25);
-      toast({
-        title: "Processing",
-        description: "Loading PDF and searching for chapter...",
-      });
+      if (useBackend) {
+        // Use real RAG pipeline with detailed progress tracking
+        updateStage("initialization");
+        setProgress(10);
+        await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Here we would implement the actual PDF processing
-      // For now, let's create a mock LaTeX output based on the chapter
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setProgress(75);
+        updateStage("download");
+        setProgress(20);
+        toast({
+          title: "🧠 AI Processing Started",
+          description: "Enhanced RAG pipeline is analyzing your request...",
+        });
+        await new Promise(resolve => setTimeout(resolve, 800));
 
-      const mockLatex = generateMockLatex(chapterInput);
-      setExtractedLatex(mockLatex);
-      setProgress(100);
+        updateStage("analysis");
+        setProgress(30);
 
+        const response = await fetch(`${backendUrl}/api/extract`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            pdf_url: pdfUrl,
+            chapter: chapterInput,
+            api_key: apiKey || undefined
+          })
+        });
+
+        updateStage("extraction");
+        setProgress(60);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Extraction failed');
+        }
+
+        updateStage("formatting");
+        setProgress(80);
+        const result: ExtractionResult = await response.json();
+        
+        updateStage("validation");
+        setProgress(95);
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        setExtractionResult(result);
+        setExtractedLatex(result.latex_content);
+        setProgress(100);
+
+        // Mark all stages as completed
+        setProcessingStages(prev => prev.map(stage => ({ ...stage, completed: true })));
+
+        toast({
+          title: "🎯 Extraction Complete!",
+          description: `Successfully extracted ${result.high_confidence_questions} high-confidence questions with ${result.estimated_accuracy}% estimated accuracy`,
+        });
+      } else {
+        // Fallback to mock data with simulated processing stages
+        for (let i = 0; i < stages.length; i++) {
+          updateStage(stages[i].stage);
+          setProgress((i + 1) * (80 / stages.length));
+          await new Promise(resolve => setTimeout(resolve, 600));
+        }
+
+        toast({
+          title: "⚠️ Demo Mode Active",
+          description: "Using mock data - start Python backend for real extraction",
+        });
+
+        const mockLatex = generateMockLatex(chapterInput);
+        const mockResult: ExtractionResult = {
+          success: true,
+          chapter: chapterInput,
+          total_questions_found: 15,
+          high_confidence_questions: 12,
+          estimated_accuracy: 87.3,
+          latex_content: mockLatex,
+          questions: [
+            { text: "Find the derivative of $f(x) = \\sin(x^2)$", type: "exercise", confidence: 0.95, page: 245 },
+            { text: "Evaluate $\\int_0^\\pi \\cos(x) dx$", type: "problem", confidence: 0.92, page: 246 },
+            { text: "Solve the equation $2x^2 - 5x + 3 = 0$", type: "illustration", confidence: 0.88, page: 247 },
+          ],
+          processing_info: {
+            pages_processed: 5,
+            relevant_pages: [245, 246, 247, 248, 249],
+            timestamp: new Date().toISOString()
+          }
+        };
+        
+        setExtractionResult(mockResult);
+        setExtractedLatex(mockLatex);
+        setProgress(100);
+        setProcessingStages(prev => prev.map(stage => ({ ...stage, completed: true })));
+
+        toast({
+          title: "✨ Demo Complete",
+          description: `Generated sample output for "${chapterInput}" - Start backend for real extraction`,
+        });
+      }
+    } catch (error: any) {
       toast({
-        title: "Success",
-        description: `Extracted LaTeX for ${chapterInput}`,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to extract content. Please try again.",
+        title: "❌ Extraction Failed",
+        description: error.message || "Failed to extract content. Please try again.",
         variant: "destructive",
       });
     } finally {
       setIsProcessing(false);
+      setCurrentStage("");
+    }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "✅ Copied!",
+        description: "LaTeX content copied to clipboard",
+      });
+    } catch (err) {
+      toast({
+        title: "❌ Copy Failed",
+        description: "Unable to copy to clipboard",
+        variant: "destructive",
+      });
     }
   };
 
@@ -128,10 +337,33 @@ const Index = () => {
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4 text-foreground">Math Quest LaTeX</h1>
-          <p className="text-xl text-muted-foreground">
-            Extract mathematical content from PDFs and convert to LaTeX
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full">
+              <BookOpen className="h-8 w-8 text-white" />
+            </div>
+            <h1 className="text-4xl font-bold text-foreground bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Math Quest LaTeX
+            </h1>
+          </div>
+          <p className="text-xl text-muted-foreground mb-4">
+            AI-Powered Mathematical Content Extraction & LaTeX Generation
           </p>
+          <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Brain className="h-4 w-4 text-blue-500" />
+              <span>Enhanced RAG Pipeline</span>
+            </div>
+            <Separator orientation="vertical" className="h-4" />
+            <div className="flex items-center gap-1">
+              <Target className="h-4 w-4 text-green-500" />
+              <span>90%+ Accuracy Target</span>
+            </div>
+            <Separator orientation="vertical" className="h-4" />
+            <div className="flex items-center gap-1">
+              <Sparkles className="h-4 w-4 text-purple-500" />
+              <span>LaTeX Formatting</span>
+            </div>
+          </div>
         </div>
 
         <Card>
@@ -183,36 +415,284 @@ const Index = () => {
             </Button>
 
             {isProcessing && (
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <Progress value={progress} className="w-full" />
-                <p className="text-sm text-muted-foreground text-center">
-                  Processing: {progress}%
-                </p>
+                <div className="text-center space-y-1">
+                  <p className="text-sm font-medium">
+                    Processing: {progress}%
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {currentStage ? processingStages.find(s => s.stage === currentStage)?.message : "Initializing..."}
+                  </p>
+                </div>
+                
+                {/* Processing Stages Visual */}
+                <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                  <h4 className="text-sm font-medium flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-yellow-500" />
+                    Processing Stages
+                  </h4>
+                  <div className="grid gap-2">
+                    {processingStages.map((stage, index) => (
+                      <div key={stage.stage} className="flex items-center gap-3 text-xs">
+                        <div className={`flex items-center justify-center w-6 h-6 rounded-full border-2 transition-all duration-300 ${
+                          stage.completed 
+                            ? "bg-green-100 border-green-500 text-green-700" 
+                            : currentStage === stage.stage 
+                            ? "bg-blue-100 border-blue-500 text-blue-700 animate-pulse" 
+                            : "bg-gray-100 border-gray-300 text-gray-500"
+                        }`}>
+                          {stage.completed ? (
+                            <CheckCircle2 className="h-3 w-3" />
+                          ) : currentStage === stage.stage ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : (
+                            stage.icon
+                          )}
+                        </div>
+                        <span className={`flex-1 ${
+                          stage.completed 
+                            ? "text-green-700" 
+                            : currentStage === stage.stage 
+                            ? "text-blue-700 font-medium" 
+                            : "text-gray-500"
+                        }`}>
+                          {stage.message}
+                        </span>
+                        {stage.completed && <span className="text-green-500 text-xs">✓</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </CardContent>
         </Card>
 
+        {/* API Key Input (Collapsible) */}
+        {showApiKeyInput && (
+          <Card className="border-blue-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-blue-700">
+                <Brain className="h-5 w-5" />
+                OpenAI API Configuration
+              </CardTitle>
+              <CardDescription>
+                Provide your OpenAI API key for enhanced accuracy (optional)
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="api-key">OpenAI API Key</Label>
+                <Input
+                  id="api-key"
+                  type="password"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="sk-..." 
+                />
+              </div>
+              <Button 
+                onClick={() => setShowApiKeyInput(false)}
+                variant="outline" 
+                size="sm"
+              >
+                Hide API Settings
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Accuracy Metrics Display */}
+        {extractionResult && (
+          <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-green-700">
+                <Target className="h-5 w-5" />
+                Extraction Results & Accuracy Metrics
+              </CardTitle>
+              <CardDescription>
+                Performance analysis of the RAG pipeline extraction
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">{extractionResult.estimated_accuracy}%</div>
+                  <div className="text-sm text-muted-foreground">Estimated Accuracy</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600">{extractionResult.high_confidence_questions}</div>
+                  <div className="text-sm text-muted-foreground">High Conf. Questions</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600">{extractionResult.total_questions_found}</div>
+                  <div className="text-sm text-muted-foreground">Total Found</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-600">{extractionResult.processing_info.pages_processed}</div>
+                  <div className="text-sm text-muted-foreground">Pages Processed</div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  {extractionResult.estimated_accuracy >= 90 ? (
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  ) : (
+                    <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                  )}
+                  <span className="text-sm">
+                    {extractionResult.estimated_accuracy >= 90 
+                      ? "🎯 Target accuracy achieved!" 
+                      : "⚡ Consider refining chapter/topic for better results"}
+                  </span>
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Relevant pages: {extractionResult.processing_info.relevant_pages.join(", ")}
+                </div>
+              </div>
+
+              {/* Individual Questions Display */}
+              <div className="mt-4">
+                <h4 className="font-semibold mb-2">Extracted Questions Preview:</h4>
+                <div className="space-y-2 max-h-32 overflow-y-auto">
+                  {extractionResult.questions.slice(0, 3).map((q, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-white rounded border">
+                      <div className="flex-1">
+                        <div className="text-sm font-medium truncate">
+                          Question {index + 1} (Page {q.page})
+                        </div>
+                        <div className="text-xs text-muted-foreground capitalize">{q.type}</div>
+                      </div>
+                      <Badge variant={q.confidence >= 0.8 ? "default" : "secondary"}>
+                        {Math.round(q.confidence * 100)}%
+                      </Badge>
+                    </div>
+                  ))}
+                  {extractionResult.questions.length > 3 && (
+                    <div className="text-xs text-center text-muted-foreground py-1">
+                      ... and {extractionResult.questions.length - 3} more questions
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {extractedLatex && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                <span>Extracted LaTeX</span>
-                <Button onClick={downloadLatex} variant="outline" size="sm">
-                  <Download className="mr-2 h-4 w-4" />
-                  Download .tex
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-purple-600" />
+                  <span>Generated LaTeX Document</span>
+                </div>
+                <div className="flex gap-2">
+                  {!showApiKeyInput && (
+                    <Button 
+                      onClick={() => setShowApiKeyInput(true)}
+                      variant="outline" 
+                      size="sm"
+                    >
+                      <Brain className="mr-2 h-4 w-4" />
+                      API Settings
+                    </Button>
+                  )}
+                  <Button 
+                    onClick={() => copyToClipboard(extractedLatex)}
+                    variant="outline" 
+                    size="sm"
+                  >
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy
+                  </Button>
+                  <Button onClick={downloadLatex} variant="outline" size="sm">
+                    <Download className="mr-2 h-4 w-4" />
+                    Download .tex
+                  </Button>
+                </div>
               </CardTitle>
               <CardDescription>
-                LaTeX code extracted from the specified chapter/topic
+                Complete LaTeX document ready for compilation with {extractionResult?.high_confidence_questions || 0} high-confidence questions
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Textarea
-                value={extractedLatex}
-                readOnly
-                className="min-h-[400px] font-mono text-sm"
-              />
+              <Tabs value={previewMode} onValueChange={(value) => setPreviewMode(value as "latex" | "preview")} className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="latex" className="flex items-center gap-2">
+                    <FileText className="h-4 w-4" />
+                    LaTeX Source
+                  </TabsTrigger>
+                  <TabsTrigger value="preview" className="flex items-center gap-2">
+                    <Eye className="h-4 w-4" />
+                    Question Preview
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="latex" className="mt-4">
+                  <div className="relative">
+                    <Textarea
+                      ref={latexRef}
+                      value={extractedLatex}
+                      readOnly
+                      className="min-h-[500px] font-mono text-sm bg-gray-50 border-2"
+                    />
+                    <div className="absolute top-2 right-2 flex gap-1">
+                      <Badge variant="secondary" className="text-xs">
+                        {extractedLatex.split('\n').length} lines
+                      </Badge>
+                      <Badge variant="outline" className="text-xs">
+                        {Math.round(extractedLatex.length / 1024 * 100) / 100} KB
+                      </Badge>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="preview" className="mt-4">
+                  <ScrollArea className="h-[500px] w-full border-2 rounded-md p-4 bg-gray-50">
+                    <div className="space-y-6">
+                      <div className="text-center border-b pb-4">
+                        <h2 className="text-xl font-bold">Mathematical Questions: {extractionResult?.chapter}</h2>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Generated on {new Date().toLocaleDateString()}
+                        </p>
+                      </div>
+                      
+                      {extractionResult?.questions.map((question, index) => (
+                        <div key={index} className="border rounded-lg p-4 bg-white shadow-sm">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className="text-xs">
+                                Question {index + 1}
+                              </Badge>
+                              <Badge variant={question.confidence >= 0.9 ? "default" : question.confidence >= 0.8 ? "secondary" : "outline"} className="text-xs">
+                                {Math.round(question.confidence * 100)}% confidence
+                              </Badge>
+                            </div>
+                            <div className="text-right text-xs text-muted-foreground">
+                              <div>Page {question.page}</div>
+                              <div className="capitalize">{question.type}</div>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-gray-50 p-3 rounded-md font-mono text-sm border-l-4 border-blue-500">
+                            {question.text}
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {(!extractionResult?.questions || extractionResult.questions.length === 0) && (
+                        <div className="text-center text-muted-foreground py-8">
+                          <Calculator className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                          <p>No questions to preview</p>
+                        </div>
+                      )}
+                    </div>
+                  </ScrollArea>
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
         )}
