@@ -349,7 +349,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-orange-50 to-green-100">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-yellow-100 to-yellow-200" style={{backgroundColor: 'hsl(55, 90%, 85%)'}}>
       {/* Enhanced header with theme toggle */}
       <div className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
@@ -513,7 +513,7 @@ const Index = () => {
         </Card>
 
         {/* API Key Input with Free Options Info */}
-        <Card className="border-2 border-dashed border-muted-foreground/30 bg-gradient-to-r from-green-50/60 to-orange-50/60">
+        <Card className="border-2 border-dashed border-muted-foreground/30 bg-gradient-to-r from-yellow-100/60 to-yellow-200/60" style={{backgroundColor: 'hsl(55, 85%, 88%)', color: 'hsl(130, 40%, 45%)'}}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-primary">
               <Brain className="h-5 w-5" />
@@ -530,7 +530,7 @@ const Index = () => {
                 <Sparkles className="h-4 w-4 text-green-500" />
                 Free AI API Options
               </h4>
-              <div className="p-4 rounded-lg bg-gradient-to-r from-green-100 to-orange-100 border border-orange-200">
+              <div className="p-4 rounded-lg bg-gradient-to-r from-yellow-100 to-yellow-200 border border-yellow-300" style={{backgroundColor: 'hsl(55, 85%, 88%)', color: 'hsl(130, 40%, 45%)'}}>
                 <div className="font-semibold text-green-700 mb-2">✅ Groq API Configured</div>
                 <div className="text-sm text-green-600">Fast Llama 3.1 70B model ready for RD Sharma extraction</div>
                 <div className="text-xs text-foreground/70 mt-2">Optimized for mathematical content and LaTeX formatting</div>
@@ -552,7 +552,7 @@ const Index = () => {
               />
             </div>
             
-            <Alert className="bg-gradient-to-r from-green-100 to-orange-100 border-orange-200">
+            <Alert className="bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-300" style={{backgroundColor: 'hsl(55, 85%, 88%)', color: 'hsl(130, 40%, 45%)'}}>
               <Brain className="h-4 w-4" />
               <AlertDescription className="text-sm">
                 <strong>Assignment Mode:</strong> RAG pipeline configured for RD Sharma Class 12 question extraction with LaTeX formatting as per job requirements.
@@ -563,7 +563,7 @@ const Index = () => {
 
         {/* Accuracy Metrics Display */}
         {extractionResult && (
-          <Card className="bg-gradient-to-r from-green-100 to-orange-100 border-orange-200">
+          <Card className="bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-300" style={{backgroundColor: 'hsl(55, 85%, 88%)', color: 'hsl(130, 40%, 45%)'}}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-green-700">
                 <Target className="h-5 w-5" />
@@ -608,7 +608,7 @@ const Index = () => {
                 </div>
                 
                 {extractionResult.processing_info?.model_used?.includes('Fallback') && (
-                  <div className="p-2 bg-orange-50 rounded border border-orange-200">
+                  <div className="p-2 bg-yellow-100 rounded border border-yellow-300" style={{backgroundColor: 'hsl(55, 85%, 88%)', color: 'hsl(130, 40%, 45%)'}}>
                     <div className="text-xs font-medium text-orange-700">⚡ Fallback Mode Active</div>
                     <div className="text-xs text-orange-600 mt-1">
                       Using RD Sharma-specific question generation. Groq API key configured for better results.
@@ -708,7 +708,7 @@ const Index = () => {
                       ref={latexRef}
                       value={extractedLatex}
                       readOnly
-                      className="min-h-[500px] font-mono text-sm bg-white text-gray-900 border-2 border-orange-200"
+                      className="min-h-[500px] font-mono text-sm border-2 border-yellow-300" style={{backgroundColor: 'hsl(55, 90%, 92%)', color: 'hsl(130, 45%, 40%)'}}
                     />
                     <div className="absolute top-2 right-2 flex gap-1">
                       <Badge variant="secondary" className="text-xs">
