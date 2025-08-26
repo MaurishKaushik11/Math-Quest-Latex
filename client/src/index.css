@@ -2,105 +2,103 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Pastel Grey & Green Theme - RD Sharma Assignment */
 
 @layer base {
   :root {
-    /* Enhanced mixed theme - sophisticated light base */
-    --background: 240 10% 98%;
-    --foreground: 240 10% 8%;
+    /* Pastel Grey and Green Light Theme */
+    --background: 150 15% 97%;
+    --foreground: 150 10% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 8%;
+    --card: 150 20% 95%;
+    --card-foreground: 150 15% 20%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 8%;
+    --popover: 150 20% 96%;
+    --popover-foreground: 150 10% 15%;
 
-    /* Rich primary with depth */
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
+    /* Soft pastel green primary */
+    --primary: 140 40% 65%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Subtle secondary with warmth */
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 240 10% 15%;
+    /* Light pastel grey secondary */
+    --secondary: 150 15% 85%;
+    --secondary-foreground: 150 15% 25%;
 
-    --muted: 220 13% 95%;
-    --muted-foreground: 240 5% 45%;
+    --muted: 150 12% 88%;
+    --muted-foreground: 150 8% 45%;
 
-    --accent: 262 80% 50%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 160 45% 70%;
+    --accent-foreground: 150 15% 15%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 60% 70%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 221 83% 53%;
+    --border: 150 15% 80%;
+    --input: 150 20% 92%;
+    --ring: 140 40% 65%;
 
     --radius: 0.75rem;
 
-    /* Enhanced gradients and surfaces */
-    --gradient-primary: linear-gradient(135deg, hsl(221, 83%, 53%), hsl(262, 80%, 50%));
-    --gradient-secondary: linear-gradient(135deg, hsl(220, 13%, 95%), hsl(240, 10%, 98%));
-    --surface-elevated: 0 0% 100%;
-    --surface-overlay: 240 10% 98%;
+    /* Enhanced surfaces */
+    --gradient-primary: linear-gradient(135deg, hsl(140, 40%, 65%), hsl(160, 45%, 70%));
+    --gradient-secondary: linear-gradient(135deg, hsl(150, 12%, 88%), hsl(150, 20%, 95%));
+    --surface-elevated: 150 25% 98%;
+    --surface-overlay: 150 15% 97%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 150 20% 96%;
+    --sidebar-foreground: 150 12% 30%;
+    --sidebar-primary: 140 40% 65%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 150 15% 88%;
+    --sidebar-accent-foreground: 150 12% 25%;
+    --sidebar-border: 150 15% 82%;
+    --sidebar-ring: 140 40% 65%;
   }
 
   .dark {
-    /* Rich dark theme with subtle colors */
-    --background: 240 10% 6%;
-    --foreground: 240 5% 95%;
+    /* Pastel Grey and Green Dark Theme */
+    --background: 150 15% 8%;
+    --foreground: 150 8% 92%;
 
-    --card: 240 8% 8%;
-    --card-foreground: 240 5% 95%;
+    --card: 150 18% 12%;
+    --card-foreground: 150 8% 90%;
 
-    --popover: 240 8% 8%;
-    --popover-foreground: 240 5% 95%;
+    --popover: 150 20% 10%;
+    --popover-foreground: 150 8% 92%;
 
-    --primary: 221 83% 53%;
-    --primary-foreground: 240 10% 6%;
+    --primary: 140 45% 60%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 6% 15%;
-    --secondary-foreground: 240 5% 90%;
+    --secondary: 150 12% 18%;
+    --secondary-foreground: 150 8% 85%;
 
-    --muted: 240 6% 12%;
-    --muted-foreground: 240 5% 65%;
+    --muted: 150 10% 22%;
+    --muted-foreground: 150 6% 65%;
 
-    --accent: 262 80% 60%;
-    --accent-foreground: 240 10% 6%;
+    --accent: 160 40% 55%;
+    --accent-foreground: 150 8% 92%;
 
-    --destructive: 0 75% 60%;
-    --destructive-foreground: 240 5% 95%;
+    --destructive: 0 55% 65%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 18%;
-    --input: 240 6% 18%;
-    --ring: 221 83% 53%;
+    --border: 150 12% 25%;
+    --input: 150 15% 20%;
+    --ring: 140 45% 60%;
 
     /* Enhanced dark surfaces */
-    --gradient-primary: linear-gradient(135deg, hsl(221, 83%, 53%), hsl(262, 80%, 60%));
-    --gradient-secondary: linear-gradient(135deg, hsl(240, 6%, 12%), hsl(240, 8%, 8%));
-    --surface-elevated: 240 8% 10%;
-    --surface-overlay: 240 10% 6%;
+    --gradient-primary: linear-gradient(135deg, hsl(140, 45%, 60%), hsl(160, 40%, 55%));
+    --gradient-secondary: linear-gradient(135deg, hsl(150, 10%, 22%), hsl(150, 18%, 12%));
+    --surface-elevated: 150 18% 14%;
+    --surface-overlay: 150 15% 8%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-background: 150 15% 10%;
+    --sidebar-foreground: 150 8% 88%;
+    --sidebar-primary: 140 45% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 150 12% 20%;
+    --sidebar-accent-foreground: 150 8% 85%;
+    --sidebar-border: 150 12% 22%;
+    --sidebar-ring: 140 45% 60%;
   }
 }
 
@@ -111,5 +109,44 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* Enhanced text visibility for pastel theme */
+  .text-muted-foreground {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  .bg-card {
+    background-color: hsl(var(--card)) !important;
+    color: hsl(var(--card-foreground)) !important;
+  }
+
+  .text-foreground {
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .bg-background {
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+  }
+
+  /* Better contrast for form elements */
+  .bg-input {
+    background-color: hsl(var(--input)) !important;
+    color: hsl(var(--foreground)) !important;
+  }
+
+  /* Enhanced readability for results section */
+  .results-card {
+    background-color: hsl(var(--card)) !important;
+    color: hsl(var(--card-foreground)) !important;
+    border: 1px solid hsl(var(--border));
+  }
+
+  /* Better contrast for badges and small text */
+  .badge-readable {
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
   }
 }

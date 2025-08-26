@@ -365,7 +365,7 @@ const Index = () => {
           </div>
           <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
             <div className="w-full flex-1 md:w-auto md:flex-none">
-              <span className="text-sm text-muted-foreground">Groq Powered • Assignment Mode</span>
+              <span className="text-sm text-foreground/80">Groq Powered • Assignment Mode</span>
             </div>
             <ThemeToggle />
           </div>
@@ -382,7 +382,7 @@ const Index = () => {
               <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
                 RD Sharma Extractor
               </h1>
-              <p className="text-2xl text-muted-foreground font-medium">
+              <p className="text-2xl text-foreground/80 font-medium">
                 RAG Pipeline for Class 12 Mathematics Questions
               </p>
             </div>
@@ -410,7 +410,7 @@ const Index = () => {
               <FileText className="h-6 w-6 text-primary" />
               PDF Source & Configuration
             </CardTitle>
-            <CardDescription className="text-base">
+            <CardDescription className="text-base text-foreground/70">
               RD Sharma Class 12 textbook is pre-configured. Enter the chapter/topic (e.g., "30.3 Conditional Probability").
             </CardDescription>
           </CardHeader>
@@ -464,7 +464,7 @@ const Index = () => {
                   <p className="text-sm font-medium">
                     Processing: {progress}%
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-foreground/70">
                     {currentStage ? processingStages.find(s => s.stage === currentStage)?.message : "Initializing..."}
                   </p>
                 </div>
@@ -519,7 +519,7 @@ const Index = () => {
               <Brain className="h-5 w-5" />
               AI API Configuration & Free Options
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-foreground/70">
               Groq API is configured for fast, accurate RD Sharma question extraction. Your assignment requires high-precision LaTeX formatting.
             </CardDescription>
           </CardHeader>
@@ -533,7 +533,7 @@ const Index = () => {
               <div className="p-4 rounded-lg bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 border border-green-200 dark:border-green-800">
                 <div className="font-semibold text-green-700 dark:text-green-400 mb-2">✅ Groq API Configured</div>
                 <div className="text-sm text-green-600 dark:text-green-300">Fast Llama 3.1 70B model ready for RD Sharma extraction</div>
-                <div className="text-xs text-muted-foreground mt-2">Optimized for mathematical content and LaTeX formatting</div>
+                <div className="text-xs text-foreground/70 mt-2">Optimized for mathematical content and LaTeX formatting</div>
               </div>
             </div>
             
@@ -569,7 +569,7 @@ const Index = () => {
                 <Target className="h-5 w-5" />
                 Extraction Results & Accuracy Metrics
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-foreground/80">
                 Performance analysis of the RAG pipeline extraction
               </CardDescription>
             </CardHeader>
@@ -577,19 +577,19 @@ const Index = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-600">{extractionResult.estimated_accuracy}%</div>
-                  <div className="text-sm text-muted-foreground">Estimated Accuracy</div>
+                  <div className="text-sm text-foreground/70">Estimated Accuracy</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-blue-600">{extractionResult.high_confidence_questions}</div>
-                  <div className="text-sm text-muted-foreground">High Conf. Questions</div>
+                  <div className="text-sm text-foreground/70">High Conf. Questions</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-purple-600">{extractionResult.total_questions_found}</div>
-                  <div className="text-sm text-muted-foreground">Total Found</div>
+                  <div className="text-sm text-foreground/70">Total Found</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-orange-600">{extractionResult.processing_info.pages_processed}</div>
-                  <div className="text-sm text-muted-foreground">Pages Processed</div>
+                  <div className="text-sm text-foreground/70">Pages Processed</div>
                 </div>
               </div>
 
@@ -616,10 +616,10 @@ const Index = () => {
                   </div>
                 )}
                 
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs text-foreground/70">
                   Relevant pages: {extractionResult.processing_info.relevant_pages.join(", ")}
                 </div>
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs text-foreground/70">
                   Model: {extractionResult.processing_info.model_used || 'Groq Llama 3.1'}
                 </div>
               </div>
@@ -634,7 +634,7 @@ const Index = () => {
                         <div className="text-sm font-medium truncate">
                           Question {index + 1} (Page {q.page})
                         </div>
-                        <div className="text-xs text-muted-foreground capitalize">{q.type}</div>
+                        <div className="text-xs text-foreground/70 capitalize">{q.type}</div>
                       </div>
                       <Badge variant={q.confidence >= 0.8 ? "default" : "secondary"}>
                         {Math.round(q.confidence * 100)}%
@@ -642,7 +642,7 @@ const Index = () => {
                     </div>
                   ))}
                   {extractionResult.questions.length > 3 && (
-                    <div className="text-xs text-center text-muted-foreground py-1">
+                    <div className="text-xs text-center text-foreground/70 py-1">
                       ... and {extractionResult.questions.length - 3} more questions
                     </div>
                   )}
@@ -726,7 +726,7 @@ const Index = () => {
                     <div className="space-y-6">
                       <div className="text-center border-b pb-4">
                         <h2 className="text-xl font-bold">Mathematical Questions: {extractionResult?.chapter}</h2>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="text-sm text-foreground/70 mt-1">
                           Generated on {new Date().toLocaleDateString()}
                         </p>
                       </div>
@@ -742,7 +742,7 @@ const Index = () => {
                                 {Math.round(question.confidence * 100)}% confidence
                               </Badge>
                             </div>
-                            <div className="text-right text-xs text-muted-foreground">
+                            <div className="text-right text-xs text-foreground/70">
                               <div>Page {question.page}</div>
                               <div className="capitalize">{question.type}</div>
                             </div>
@@ -755,7 +755,7 @@ const Index = () => {
                       ))}
                       
                       {(!extractionResult?.questions || extractionResult.questions.length === 0) && (
-                        <div className="text-center text-muted-foreground py-8">
+                        <div className="text-center text-foreground/70 py-8">
                           <Calculator className="h-12 w-12 mx-auto mb-3 opacity-50" />
                           <p>No questions to preview</p>
                         </div>
@@ -773,7 +773,7 @@ const Index = () => {
             <CardTitle className="text-lg">How it works</CardTitle>
           </CardHeader>
           <CardContent>
-            <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
+            <ol className="list-decimal list-inside space-y-2 text-sm text-foreground/70">
               <li>Enter the chapter or topic you want to extract (e.g., "30.3", "Integration", etc.)</li>
               <li>The tool will process the PDF and identify mathematical content</li>
               <li>Mathematical expressions are converted to proper LaTeX format</li>
