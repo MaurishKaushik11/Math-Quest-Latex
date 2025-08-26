@@ -12,7 +12,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FileText, Download, Loader2, Brain, Target, CheckCircle2, AlertTriangle, Sparkles, BookOpen, Calculator, Zap, Copy, Eye, Settings } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { FileText, Download, Loader2, Brain, Target, CheckCircle2, AlertTriangle, Sparkles, BookOpen, Calculator, Zap, Copy, Eye, Settings, Cpu, BarChart3 } from "lucide-react";
 
 interface ExtractedQuestion {
   text: string;
@@ -122,18 +123,19 @@ const Index = () => {
       return;
     }
 
-    // Check if we should use the enhanced backend or fallback to mock
-    const backendUrl = "http://localhost:5000";
+    // Use the enhanced backend with OpenAI
+    const backendUrl = window.location.origin;
     let useBackend = true;
 
     // Test if backend is available
     try {
-      await fetch(`${backendUrl}/api/health`, { method: 'GET' });
+      const response = await fetch(`${backendUrl}/api/health`, { method: 'GET' });
+      if (!response.ok) throw new Error('Backend not available');
     } catch {
       useBackend = false;
       toast({
         title: "Backend Unavailable",
-        description: "Using mock data. Start the Python backend for real extraction.",
+        description: "Using demo mode. Check server configuration.",
         variant: "destructive",
       });
     }
@@ -154,8 +156,8 @@ const Index = () => {
         updateStage("download");
         setProgress(20);
         toast({
-          title: "🧠 AI Processing Started",
-          description: "Enhanced RAG pipeline is analyzing your request...",
+          title: "🚀 GPT-5 Processing Started",
+          description: "Advanced AI model analyzing PDF with 95% accuracy target...",
         });
         await new Promise(resolve => setTimeout(resolve, 800));
 
@@ -198,8 +200,8 @@ const Index = () => {
         setProcessingStages(prev => prev.map(stage => ({ ...stage, completed: true })));
 
         toast({
-          title: "🎯 Extraction Complete!",
-          description: `Successfully extracted ${result.high_confidence_questions} high-confidence questions with ${result.estimated_accuracy}% estimated accuracy`,
+          title: `🎯 ${result.estimated_accuracy >= 95 ? 'Target Achieved!' : 'Extraction Complete!'}`,
+          description: `Extracted ${result.high_confidence_questions}/${result.total_questions_found} questions with ${result.estimated_accuracy}% accuracy (${(result.processing_info?.processing_time_ms / 1000)?.toFixed(1)}s)`,
         });
       } else {
         // Fallback to mock data with simulated processing stages
@@ -334,46 +336,69 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full">
-              <BookOpen className="h-8 w-8 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 dark:from-background dark:via-background dark:to-background">
+      {/* Enhanced header with theme toggle */}
+      <div className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-14 items-center">
+          <div className="mr-4 hidden md:flex">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-gradient-to-br from-primary to-accent rounded-lg">
+                <BookOpen className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <span className="font-bold text-lg bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Math Quest LaTeX Pro
+              </span>
             </div>
-            <h1 className="text-4xl font-bold text-foreground bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Math Quest LaTeX
-            </h1>
           </div>
-          <p className="text-xl text-muted-foreground mb-4">
-            AI-Powered Mathematical Content Extraction & LaTeX Generation
-          </p>
-          <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Brain className="h-4 w-4 text-blue-500" />
-              <span>Enhanced RAG Pipeline</span>
+          <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+            <div className="w-full flex-1 md:w-auto md:flex-none">
+              <span className="text-sm text-muted-foreground">GPT-5 Powered • 95% Accuracy</span>
             </div>
-            <Separator orientation="vertical" className="h-4" />
-            <div className="flex items-center gap-1">
-              <Target className="h-4 w-4 text-green-500" />
-              <span>90%+ Accuracy Target</span>
+            <ThemeToggle />
+          </div>
+        </div>
+      </div>
+      
+      <div className="container mx-auto p-6 space-y-8">
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="p-4 bg-gradient-to-br from-primary via-primary to-accent rounded-2xl shadow-lg">
+              <Calculator className="h-12 w-12 text-primary-foreground" />
             </div>
-            <Separator orientation="vertical" className="h-4" />
-            <div className="flex items-center gap-1">
-              <Sparkles className="h-4 w-4 text-purple-500" />
-              <span>LaTeX Formatting</span>
+            <div>
+              <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                Enhanced PDF Extraction
+              </h1>
+              <p className="text-2xl text-muted-foreground font-medium">
+                Advanced AI-Powered Mathematical Content Analysis
+              </p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+            <div className="flex items-center justify-center gap-2 p-3 rounded-lg bg-card border">
+              <Cpu className="h-5 w-5 text-blue-500" />
+              <span className="font-medium">GPT-5 Model</span>
+            </div>
+            <div className="flex items-center justify-center gap-2 p-3 rounded-lg bg-card border">
+              <BarChart3 className="h-5 w-5 text-green-500" />
+              <span className="font-medium">95% Target Accuracy</span>
+            </div>
+            <div className="flex items-center justify-center gap-2 p-3 rounded-lg bg-card border">
+              <Sparkles className="h-5 w-5 text-purple-500" />
+              <span className="font-medium">LaTeX Export</span>
             </div>
           </div>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              PDF Source
+        <Card className="border-2 shadow-lg bg-gradient-to-br from-card to-card/50">
+          <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <FileText className="h-6 w-6 text-primary" />
+              PDF Source & Configuration
             </CardTitle>
-            <CardDescription>
-              The PDF source is pre-configured. Enter the chapter/topic you want to extract.
+            <CardDescription className="text-base">
+              Configure your PDF source and specify the chapter/topic for targeted extraction with enhanced accuracy.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -402,15 +427,19 @@ const Index = () => {
             <Button 
               onClick={handleExtract} 
               disabled={isProcessing || !chapterInput.trim()}
-              className="w-full"
+              className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg transition-all duration-300 transform hover:scale-[1.02]"
+              data-testid="extract-button"
             >
               {isProcessing ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Processing...
+                  <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                  Processing with GPT-5...
                 </>
               ) : (
-                "Extract LaTeX Content"
+                <>
+                  <Brain className="mr-3 h-5 w-5" />
+                  Extract with 95% Accuracy
+                </>
               )}
             </Button>
 
