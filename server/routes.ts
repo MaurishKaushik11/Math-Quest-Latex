@@ -37,6 +37,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         validatedData.chapter
       );
       
+      // Add helpful message if using fallback mode
+      if (result.processing_info?.model_used?.includes('Fallback')) {
+        result.processing_info.fallback_message = "API quota exceeded. Using enhanced fallback mode with intelligent question generation.";
+      }
+      
       res.json(result);
     } catch (error: any) {
       console.error("Extraction error:", error);

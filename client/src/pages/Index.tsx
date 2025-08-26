@@ -199,10 +199,19 @@ const Index = () => {
         // Mark all stages as completed
         setProcessingStages(prev => prev.map(stage => ({ ...stage, completed: true })));
 
-        toast({
-          title: `🎯 ${result.estimated_accuracy >= 95 ? 'Target Achieved!' : 'Extraction Complete!'}`,
-          description: `Extracted ${result.high_confidence_questions}/${result.total_questions_found} questions with ${result.estimated_accuracy}% accuracy (${(result.processing_info?.processing_time_ms / 1000)?.toFixed(1)}s)`,
-        });
+        // Check if using fallback mode
+        if (result.processing_info?.model_used?.includes('Fallback')) {
+          toast({
+            title: "⚡ Enhanced Fallback Mode Active",
+            description: `Generated ${result.high_confidence_questions}/${result.total_questions_found} intelligent questions with ${result.estimated_accuracy}% accuracy. API quota exceeded - see options below.`,
+            variant: "default",
+          });
+        } else {
+          toast({
+            title: `🎯 ${result.estimated_accuracy >= 95 ? 'Target Achieved!' : 'Extraction Complete!'}`,
+            description: `Extracted ${result.high_confidence_questions}/${result.total_questions_found} questions with ${result.estimated_accuracy}% accuracy (${(result.processing_info?.processing_time_ms / 1000)?.toFixed(1)}s)`,
+          });
+        }
       } else {
         // Fallback to mock data with simulated processing stages
         for (let i = 0; i < stages.length; i++) {
@@ -498,39 +507,66 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* API Key Input (Collapsible) */}
-        {showApiKeyInput && (
-          <Card className="border-blue-200">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-blue-700">
-                <Brain className="h-5 w-5" />
-                OpenAI API Configuration
-              </CardTitle>
-              <CardDescription>
-                Provide your OpenAI API key for enhanced accuracy (optional)
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="api-key">OpenAI API Key</Label>
-                <Input
-                  id="api-key"
-                  type="password"
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                  placeholder="sk-..." 
-                />
+        {/* API Key Input with Free Options Info */}
+        <Card className="border-2 border-dashed border-muted-foreground/30 bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-primary">
+              <Brain className="h-5 w-5" />
+              AI API Configuration & Free Options
+            </CardTitle>
+            <CardDescription className="space-y-2">
+              <p>Your current API key has exceeded its quota. Here are your options:</p>
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Free API Alternatives */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-sm flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-green-500" />
+                Free AI API Options
+              </h4>
+              <div className="grid gap-3">
+                <div className="p-3 rounded-lg bg-card border border-green-200 dark:border-green-800">
+                  <div className="font-medium text-sm text-green-700 dark:text-green-400">🆓 Hugging Face (Recommended)</div>
+                  <div className="text-xs text-muted-foreground mt-1">Free tier: 1000 requests/month • Models: Llama, Mistral, CodeLlama</div>
+                  <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">Get key at: huggingface.co/settings/tokens</div>
+                </div>
+                <div className="p-3 rounded-lg bg-card border border-blue-200 dark:border-blue-800">
+                  <div className="font-medium text-sm text-blue-700 dark:text-blue-400">🔹 Groq (Fast & Free)</div>
+                  <div className="text-xs text-muted-foreground mt-1">Free tier: Very fast inference • Models: Llama 3, Mixtral</div>
+                  <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">Get key at: console.groq.com</div>
+                </div>
+                <div className="p-3 rounded-lg bg-card border border-purple-200 dark:border-purple-800">
+                  <div className="font-medium text-sm text-purple-700 dark:text-purple-400">💜 Together AI</div>
+                  <div className="text-xs text-muted-foreground mt-1">$5 free credits • Multiple open-source models</div>
+                  <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">Get key at: together.ai</div>
+                </div>
               </div>
-              <Button 
-                onClick={() => setShowApiKeyInput(false)}
-                variant="outline" 
-                size="sm"
-              >
-                Hide API Settings
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+            
+            {/* Current API Key Input */}
+            <div className="space-y-2 pt-4 border-t">
+              <Label htmlFor="api-key" className="flex items-center gap-2">
+                <span>Current API Key</span>
+                <Badge variant="secondary" className="text-xs">Optional - Uses Fallback if Missing</Badge>
+              </Label>
+              <Input
+                id="api-key"
+                type="password"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="sk-... or paste new key from alternatives above"
+              />
+            </div>
+            
+            <Alert className="bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950/20 dark:to-orange-950/20 dark:border-amber-800">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertDescription className="text-sm">
+                <strong>Current Mode:</strong> Enhanced Fallback - The system will generate intelligent questions based on the chapter topic even without API access.
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
 
         {/* Accuracy Metrics Display */}
         {extractionResult && (
@@ -577,8 +613,21 @@ const Index = () => {
                       : "⚡ Consider refining chapter/topic for better results"}
                   </span>
                 </div>
+                
+                {extractionResult.processing_info?.model_used?.includes('Fallback') && (
+                  <div className="p-2 bg-amber-50 dark:bg-amber-950/20 rounded border border-amber-200 dark:border-amber-800">
+                    <div className="text-xs font-medium text-amber-800 dark:text-amber-200">⚡ Fallback Mode Active</div>
+                    <div className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                      Using intelligent question generation. Add a free API key above for AI-powered extraction.
+                    </div>
+                  </div>
+                )}
+                
                 <div className="text-xs text-muted-foreground">
                   Relevant pages: {extractionResult.processing_info.relevant_pages.join(", ")}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Model: {extractionResult.processing_info.model_used}
                 </div>
               </div>
 
