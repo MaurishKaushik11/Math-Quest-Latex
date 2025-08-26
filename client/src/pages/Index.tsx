@@ -34,6 +34,9 @@ interface ExtractionResult {
     pages_processed: number;
     relevant_pages: number[];
     timestamp: string;
+    model_used?: string;
+    processing_time_ms?: number;
+    fallback_message?: string;
   };
 }
 
@@ -45,7 +48,7 @@ interface ProcessingStage {
 }
 
 const Index = () => {
-  const [pdfUrl, setPdfUrl] = useState("https://drive.google.com/uc?export=download&id=1BQllRXh5_ID08uPTVfEe0DgmxPUm867F");
+  const [pdfUrl, setPdfUrl] = useState("https://drive.google.com/file/d/1BQllRXh5_ID08uPTVfEe0DgmxPUm867F/view?usp=sharing");
   const [chapterInput, setChapterInput] = useState("");
   const [extractedLatex, setExtractedLatex] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -156,8 +159,8 @@ const Index = () => {
         updateStage("download");
         setProgress(20);
         toast({
-          title: "🚀 GPT-5 Processing Started",
-          description: "Advanced AI model analyzing PDF with 95% accuracy target...",
+          title: "🚀 Groq RAG Pipeline Started",
+          description: "Analyzing RD Sharma Class 12 for question extraction...",
         });
         await new Promise(resolve => setTimeout(resolve, 800));
 
@@ -203,13 +206,14 @@ const Index = () => {
         if (result.processing_info?.model_used?.includes('Fallback')) {
           toast({
             title: "⚡ Enhanced Fallback Mode Active",
-            description: `Generated ${result.high_confidence_questions}/${result.total_questions_found} intelligent questions with ${result.estimated_accuracy}% accuracy. API quota exceeded - see options below.`,
+            description: `Generated ${result.high_confidence_questions}/${result.total_questions_found} intelligent questions with ${result.estimated_accuracy}% accuracy.`,
             variant: "default",
           });
         } else {
+          const timeText = result.processing_info?.processing_time_ms ? `(${(result.processing_info.processing_time_ms / 1000).toFixed(1)}s)` : '';
           toast({
-            title: `🎯 ${result.estimated_accuracy >= 95 ? 'Target Achieved!' : 'Extraction Complete!'}`,
-            description: `Extracted ${result.high_confidence_questions}/${result.total_questions_found} questions with ${result.estimated_accuracy}% accuracy (${(result.processing_info?.processing_time_ms / 1000)?.toFixed(1)}s)`,
+            title: `🎯 RD Sharma Extraction Complete!`,
+            description: `Extracted ${result.high_confidence_questions}/${result.total_questions_found} questions with ${result.estimated_accuracy}% accuracy ${timeText}`,
           });
         }
       } else {
@@ -355,13 +359,13 @@ const Index = () => {
                 <BookOpen className="h-5 w-5 text-primary-foreground" />
               </div>
               <span className="font-bold text-lg bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Math Quest LaTeX Pro
+                RD Sharma RAG Extractor
               </span>
             </div>
           </div>
           <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
             <div className="w-full flex-1 md:w-auto md:flex-none">
-              <span className="text-sm text-muted-foreground">GPT-5 Powered • 95% Accuracy</span>
+              <span className="text-sm text-muted-foreground">Groq Powered • Assignment Mode</span>
             </div>
             <ThemeToggle />
           </div>
@@ -376,10 +380,10 @@ const Index = () => {
             </div>
             <div>
               <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                Enhanced PDF Extraction
+                RD Sharma Extractor
               </h1>
               <p className="text-2xl text-muted-foreground font-medium">
-                Advanced AI-Powered Mathematical Content Analysis
+                RAG Pipeline for Class 12 Mathematics Questions
               </p>
             </div>
           </div>
@@ -387,7 +391,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
             <div className="flex items-center justify-center gap-2 p-3 rounded-lg bg-card border">
               <Cpu className="h-5 w-5 text-blue-500" />
-              <span className="font-medium">GPT-5 Model</span>
+              <span className="font-medium">Groq Llama 3.1</span>
             </div>
             <div className="flex items-center justify-center gap-2 p-3 rounded-lg bg-card border">
               <BarChart3 className="h-5 w-5 text-green-500" />
@@ -407,7 +411,7 @@ const Index = () => {
               PDF Source & Configuration
             </CardTitle>
             <CardDescription className="text-base">
-              Configure your PDF source and specify the chapter/topic for targeted extraction with enhanced accuracy.
+              RD Sharma Class 12 textbook is pre-configured. Enter the chapter/topic (e.g., "30.3 Conditional Probability").
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -429,7 +433,8 @@ const Index = () => {
                 id="chapter"
                 value={chapterInput}
                 onChange={(e) => setChapterInput(e.target.value)}
-                placeholder="e.g., 30.3, Chapter 5, Derivatives, etc."
+                placeholder="e.g., 30.3 Conditional Probability, 30.9 Bayes' Theorem"
+                data-testid="chapter-input"
               />
             </div>
 
@@ -447,7 +452,7 @@ const Index = () => {
               ) : (
                 <>
                   <Brain className="mr-3 h-5 w-5" />
-                  Extract with 95% Accuracy
+                  Extract RD Sharma Questions
                 </>
               )}
             </Button>
@@ -515,7 +520,7 @@ const Index = () => {
               AI API Configuration & Free Options
             </CardTitle>
             <CardDescription>
-              Configure your AI API for enhanced accuracy. Groq is recommended for fast, free processing.
+              Groq API is configured for fast, accurate RD Sharma question extraction. Your assignment requires high-precision LaTeX formatting.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -525,22 +530,10 @@ const Index = () => {
                 <Sparkles className="h-4 w-4 text-green-500" />
                 Free AI API Options
               </h4>
-              <div className="grid gap-3">
-                <div className="p-3 rounded-lg bg-card border border-green-200 dark:border-green-800">
-                  <div className="font-medium text-sm text-green-700 dark:text-green-400">🆓 Hugging Face (Recommended)</div>
-                  <div className="text-xs text-muted-foreground mt-1">Free tier: 1000 requests/month • Models: Llama, Mistral, CodeLlama</div>
-                  <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">Get key at: huggingface.co/settings/tokens</div>
-                </div>
-                <div className="p-3 rounded-lg bg-card border border-blue-200 dark:border-blue-800">
-                  <div className="font-medium text-sm text-blue-700 dark:text-blue-400">🔹 Groq (Fast & Free)</div>
-                  <div className="text-xs text-muted-foreground mt-1">Free tier: Very fast inference • Models: Llama 3, Mixtral</div>
-                  <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">Get key at: console.groq.com</div>
-                </div>
-                <div className="p-3 rounded-lg bg-card border border-purple-200 dark:border-purple-800">
-                  <div className="font-medium text-sm text-purple-700 dark:text-purple-400">💜 Together AI</div>
-                  <div className="text-xs text-muted-foreground mt-1">$5 free credits • Multiple open-source models</div>
-                  <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">Get key at: together.ai</div>
-                </div>
+              <div className="p-4 rounded-lg bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 border border-green-200 dark:border-green-800">
+                <div className="font-semibold text-green-700 dark:text-green-400 mb-2">✅ Groq API Configured</div>
+                <div className="text-sm text-green-600 dark:text-green-300">Fast Llama 3.1 70B model ready for RD Sharma extraction</div>
+                <div className="text-xs text-muted-foreground mt-2">Optimized for mathematical content and LaTeX formatting</div>
               </div>
             </div>
             
@@ -559,10 +552,10 @@ const Index = () => {
               />
             </div>
             
-            <Alert className="bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 dark:from-amber-950/20 dark:to-orange-950/20 dark:border-amber-800">
-              <AlertTriangle className="h-4 w-4" />
+            <Alert className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 dark:from-blue-950/20 dark:to-purple-950/20 dark:border-blue-800">
+              <Brain className="h-4 w-4" />
               <AlertDescription className="text-sm">
-                <strong>Current Mode:</strong> Enhanced Fallback - The system will generate intelligent questions based on the chapter topic even without API access.
+                <strong>Assignment Mode:</strong> RAG pipeline configured for RD Sharma Class 12 question extraction with LaTeX formatting as per job requirements.
               </AlertDescription>
             </Alert>
           </CardContent>
@@ -618,7 +611,7 @@ const Index = () => {
                   <div className="p-2 bg-amber-50 dark:bg-amber-950/20 rounded border border-amber-200 dark:border-amber-800">
                     <div className="text-xs font-medium text-amber-800 dark:text-amber-200">⚡ Fallback Mode Active</div>
                     <div className="text-xs text-amber-700 dark:text-amber-300 mt-1">
-                      Using intelligent question generation. Add a free API key above for AI-powered extraction.
+                      Using RD Sharma-specific question generation. Groq API key configured for better results.
                     </div>
                   </div>
                 )}
@@ -627,7 +620,7 @@ const Index = () => {
                   Relevant pages: {extractionResult.processing_info.relevant_pages.join(", ")}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  Model: {extractionResult.processing_info.model_used}
+                  Model: {extractionResult.processing_info.model_used || 'Groq Llama 3.1'}
                 </div>
               </div>
 

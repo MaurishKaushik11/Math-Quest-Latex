@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { pdfExtractor } from "./openai-service";
+import { rdSharmaExtractor } from "./groq-service";
 import { z } from "zod";
 
 const extractRequestSchema = z.object({
@@ -23,16 +23,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Override API key if provided in request
       if (validatedData.api_key) {
-        process.env.OPENAI_API_KEY = validatedData.api_key;
+        process.env.GROQ_API_KEY = validatedData.api_key;
       }
       
-      if (!process.env.OPENAI_API_KEY) {
-        return res.status(400).json({ 
-          error: "OpenAI API key not configured. Please provide api_key in request or set OPENAI_API_KEY environment variable." 
-        });
+      // Set default Groq API key
+      if (!process.env.GROQ_API_KEY) {
+        process.env.GROQ_API_KEY = "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";
       }
       
-      const result = await pdfExtractor.extractQuestionsFromPDF(
+      const result = await rdSharmaExtractor.extractQuestionsFromPDF(
         validatedData.pdf_url,
         validatedData.chapter
       );
