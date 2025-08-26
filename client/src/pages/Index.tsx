@@ -708,7 +708,7 @@ const Index = () => {
                       ref={latexRef}
                       value={extractedLatex}
                       readOnly
-                      className="min-h-[500px] font-mono text-sm bg-gray-50 border-2"
+                      className="min-h-[500px] font-mono text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border-2 border-gray-200 dark:border-gray-700"
                     />
                     <div className="absolute top-2 right-2 flex gap-1">
                       <Badge variant="secondary" className="text-xs">
