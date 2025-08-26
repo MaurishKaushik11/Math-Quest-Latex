@@ -577,19 +577,19 @@ const Index = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-green-600">{extractionResult.estimated_accuracy}%</div>
-                  <div className="text-sm text-foreground/70">Estimated Accuracy</div>
+                  <div className="text-sm font-semibold" style={{color: 'hsl(0, 0%, 10%)'}}>Estimated Accuracy</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-blue-600">{extractionResult.high_confidence_questions}</div>
-                  <div className="text-sm text-foreground/70">High Conf. Questions</div>
+                  <div className="text-sm font-semibold" style={{color: 'hsl(0, 0%, 10%)'}}>High Conf. Questions</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-purple-600">{extractionResult.total_questions_found}</div>
-                  <div className="text-sm text-foreground/70">Total Found</div>
+                  <div className="text-sm font-semibold" style={{color: 'hsl(0, 0%, 10%)'}}>Total Found</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-orange-600">{extractionResult.processing_info.pages_processed}</div>
-                  <div className="text-sm text-foreground/70">Pages Processed</div>
+                  <div className="text-sm font-semibold" style={{color: 'hsl(0, 0%, 10%)'}}>Pages Processed</div>
                 </div>
               </div>
 
@@ -616,25 +616,25 @@ const Index = () => {
                   </div>
                 )}
                 
-                <div className="text-xs text-foreground/70">
+                <div className="text-xs font-medium" style={{color: 'hsl(0, 0%, 15%)'}}>
                   Relevant pages: {extractionResult.processing_info.relevant_pages.join(", ")}
                 </div>
-                <div className="text-xs text-foreground/70">
+                <div className="text-xs font-medium" style={{color: 'hsl(0, 0%, 15%)'}}>
                   Model: {extractionResult.processing_info.model_used || 'Groq Llama 3.1'}
                 </div>
               </div>
 
               {/* Individual Questions Display */}
               <div className="mt-4">
-                <h4 className="font-semibold mb-2">Extracted Questions Preview:</h4>
+                <h4 className="font-bold mb-2" style={{color: 'hsl(0, 0%, 5%)'}}>Extracted Questions Preview:</h4>
                 <div className="space-y-2 max-h-32 overflow-y-auto">
                   {extractionResult.questions.slice(0, 3).map((q, index) => (
                     <div key={index} className="flex items-center justify-between p-2 bg-white rounded border">
                       <div className="flex-1">
-                        <div className="text-sm font-medium truncate">
+                        <div className="text-sm font-bold truncate" style={{color: 'hsl(0, 0%, 5%)'}}>
                           Question {index + 1} (Page {q.page})
                         </div>
-                        <div className="text-xs text-foreground/70 capitalize">{q.type}</div>
+                        <div className="text-xs font-medium capitalize" style={{color: 'hsl(0, 0%, 20%)'}}>{q.type}</div>
                       </div>
                       <Badge variant={q.confidence >= 0.8 ? "default" : "secondary"}>
                         {Math.round(q.confidence * 100)}%
@@ -642,7 +642,7 @@ const Index = () => {
                     </div>
                   ))}
                   {extractionResult.questions.length > 3 && (
-                    <div className="text-xs text-center text-foreground/70 py-1">
+                    <div className="text-xs text-center font-medium py-1" style={{color: 'hsl(0, 0%, 15%)'}}>
                       ... and {extractionResult.questions.length - 3} more questions
                     </div>
                   )}
