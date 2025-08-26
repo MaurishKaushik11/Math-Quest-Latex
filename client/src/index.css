@@ -2,103 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Pastel Grey & Green Theme - RD Sharma Assignment */
+/* Pastel Green & Orange Theme - RD Sharma Assignment */
 
 @layer base {
   :root {
-    /* Pastel Grey and Green Light Theme */
-    --background: 150 15% 97%;
+    /* Pastel Green and Orange Light Theme */
+    --background: 120 25% 96%;
     --foreground: 0 0% 5%;
 
-    --card: 150 20% 95%;
+    --card: 120 30% 94%;
     --card-foreground: 0 0% 8%;
 
-    --popover: 150 20% 96%;
-    --popover-foreground: 150 10% 15%;
+    --popover: 120 25% 95%;
+    --popover-foreground: 0 0% 5%;
 
     /* Soft pastel green primary */
-    --primary: 140 40% 65%;
+    --primary: 130 45% 65%;
     --primary-foreground: 0 0% 100%;
 
-    /* Light pastel grey secondary */
-    --secondary: 150 15% 85%;
+    /* Light pastel orange secondary */
+    --secondary: 25 60% 80%;
     --secondary-foreground: 0 0% 10%;
 
-    --muted: 150 12% 88%;
+    --muted: 120 20% 88%;
     --muted-foreground: 0 0% 25%;
 
-    --accent: 160 45% 70%;
+    --accent: 35 70% 75%;
     --accent-foreground: 0 0% 5%;
 
     --destructive: 0 60% 70%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 150 15% 80%;
-    --input: 150 20% 92%;
-    --ring: 140 40% 65%;
+    --border: 120 20% 82%;
+    --input: 120 25% 92%;
+    --ring: 130 45% 65%;
 
     --radius: 0.75rem;
 
     /* Enhanced surfaces */
-    --gradient-primary: linear-gradient(135deg, hsl(140, 40%, 65%), hsl(160, 45%, 70%));
-    --gradient-secondary: linear-gradient(135deg, hsl(150, 12%, 88%), hsl(150, 20%, 95%));
-    --surface-elevated: 150 25% 98%;
-    --surface-overlay: 150 15% 97%;
+    --gradient-primary: linear-gradient(135deg, hsl(130, 45%, 65%), hsl(35, 70%, 75%));
+    --gradient-secondary: linear-gradient(135deg, hsl(120, 20%, 88%), hsl(25, 60%, 85%));
+    --surface-elevated: 120 30% 97%;
+    --surface-overlay: 120 25% 96%;
 
-    --sidebar-background: 150 20% 96%;
-    --sidebar-foreground: 150 12% 30%;
-    --sidebar-primary: 140 40% 65%;
+    --sidebar-background: 120 25% 94%;
+    --sidebar-foreground: 0 0% 15%;
+    --sidebar-primary: 130 45% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 150 15% 88%;
-    --sidebar-accent-foreground: 150 12% 25%;
-    --sidebar-border: 150 15% 82%;
-    --sidebar-ring: 140 40% 65%;
-  }
-
-  .dark {
-    /* Pastel Grey and Green Dark Theme */
-    --background: 150 15% 8%;
-    --foreground: 150 8% 92%;
-
-    --card: 150 18% 12%;
-    --card-foreground: 150 8% 90%;
-
-    --popover: 150 20% 10%;
-    --popover-foreground: 150 8% 92%;
-
-    --primary: 140 45% 60%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 150 12% 18%;
-    --secondary-foreground: 150 8% 85%;
-
-    --muted: 150 10% 22%;
-    --muted-foreground: 150 6% 65%;
-
-    --accent: 160 40% 55%;
-    --accent-foreground: 150 8% 92%;
-
-    --destructive: 0 55% 65%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 150 12% 25%;
-    --input: 150 15% 20%;
-    --ring: 140 45% 60%;
-
-    /* Enhanced dark surfaces */
-    --gradient-primary: linear-gradient(135deg, hsl(140, 45%, 60%), hsl(160, 40%, 55%));
-    --gradient-secondary: linear-gradient(135deg, hsl(150, 10%, 22%), hsl(150, 18%, 12%));
-    --surface-elevated: 150 18% 14%;
-    --surface-overlay: 150 15% 8%;
-
-    --sidebar-background: 150 15% 10%;
-    --sidebar-foreground: 150 8% 88%;
-    --sidebar-primary: 140 45% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 150 12% 20%;
-    --sidebar-accent-foreground: 150 8% 85%;
-    --sidebar-border: 150 12% 22%;
-    --sidebar-ring: 140 45% 60%;
+    --sidebar-accent: 25 60% 85%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 120 20% 84%;
+    --sidebar-ring: 130 45% 65%;
   }
 }
 
@@ -110,6 +64,7 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: hsl(0, 0%, 5%) !important;
   }
 
   /* Force black text for maximum visibility */
@@ -167,5 +122,26 @@
   .question-text {
     color: hsl(0, 0%, 5%) !important;
     font-weight: 500;
+  }
+
+  /* Beautiful pastel gradients */
+  .gradient-green-orange {
+    background: linear-gradient(135deg, hsl(130, 45%, 75%), hsl(35, 70%, 80%));
+  }
+
+  .gradient-orange-green {
+    background: linear-gradient(135deg, hsl(35, 70%, 80%), hsl(130, 45%, 75%));
+  }
+
+  /* Enhanced button styling */
+  .btn-primary {
+    background: linear-gradient(135deg, hsl(130, 45%, 65%), hsl(35, 70%, 70%));
+    color: white;
+    border: none;
+  }
+
+  .btn-secondary {
+    background: hsl(25, 60%, 85%);
+    color: hsl(0, 0%, 10%);
   }
 }

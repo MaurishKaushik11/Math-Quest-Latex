@@ -349,7 +349,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 dark:from-background dark:via-background dark:to-background">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-orange-50 to-green-100">
       {/* Enhanced header with theme toggle */}
       <div className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
@@ -513,7 +513,7 @@ const Index = () => {
         </Card>
 
         {/* API Key Input with Free Options Info */}
-        <Card className="border-2 border-dashed border-muted-foreground/30 bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20">
+        <Card className="border-2 border-dashed border-muted-foreground/30 bg-gradient-to-r from-green-50/60 to-orange-50/60">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-primary">
               <Brain className="h-5 w-5" />
@@ -530,9 +530,9 @@ const Index = () => {
                 <Sparkles className="h-4 w-4 text-green-500" />
                 Free AI API Options
               </h4>
-              <div className="p-4 rounded-lg bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 border border-green-200 dark:border-green-800">
-                <div className="font-semibold text-green-700 dark:text-green-400 mb-2">✅ Groq API Configured</div>
-                <div className="text-sm text-green-600 dark:text-green-300">Fast Llama 3.1 70B model ready for RD Sharma extraction</div>
+              <div className="p-4 rounded-lg bg-gradient-to-r from-green-100 to-orange-100 border border-orange-200">
+                <div className="font-semibold text-green-700 mb-2">✅ Groq API Configured</div>
+                <div className="text-sm text-green-600">Fast Llama 3.1 70B model ready for RD Sharma extraction</div>
                 <div className="text-xs text-foreground/70 mt-2">Optimized for mathematical content and LaTeX formatting</div>
               </div>
             </div>
@@ -552,7 +552,7 @@ const Index = () => {
               />
             </div>
             
-            <Alert className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 dark:from-blue-950/20 dark:to-purple-950/20 dark:border-blue-800">
+            <Alert className="bg-gradient-to-r from-green-100 to-orange-100 border-orange-200">
               <Brain className="h-4 w-4" />
               <AlertDescription className="text-sm">
                 <strong>Assignment Mode:</strong> RAG pipeline configured for RD Sharma Class 12 question extraction with LaTeX formatting as per job requirements.
@@ -563,7 +563,7 @@ const Index = () => {
 
         {/* Accuracy Metrics Display */}
         {extractionResult && (
-          <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+          <Card className="bg-gradient-to-r from-green-100 to-orange-100 border-orange-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-green-700">
                 <Target className="h-5 w-5" />
@@ -608,9 +608,9 @@ const Index = () => {
                 </div>
                 
                 {extractionResult.processing_info?.model_used?.includes('Fallback') && (
-                  <div className="p-2 bg-amber-50 dark:bg-amber-950/20 rounded border border-amber-200 dark:border-amber-800">
-                    <div className="text-xs font-medium text-amber-800 dark:text-amber-200">⚡ Fallback Mode Active</div>
-                    <div className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                  <div className="p-2 bg-orange-50 rounded border border-orange-200">
+                    <div className="text-xs font-medium text-orange-700">⚡ Fallback Mode Active</div>
+                    <div className="text-xs text-orange-600 mt-1">
                       Using RD Sharma-specific question generation. Groq API key configured for better results.
                     </div>
                   </div>
@@ -708,7 +708,7 @@ const Index = () => {
                       ref={latexRef}
                       value={extractedLatex}
                       readOnly
-                      className="min-h-[500px] font-mono text-sm bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border-2 border-gray-200 dark:border-gray-700"
+                      className="min-h-[500px] font-mono text-sm bg-white text-gray-900 border-2 border-orange-200"
                     />
                     <div className="absolute top-2 right-2 flex gap-1">
                       <Badge variant="secondary" className="text-xs">
