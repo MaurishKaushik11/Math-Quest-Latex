@@ -514,8 +514,8 @@ const Index = () => {
               <Brain className="h-5 w-5" />
               AI API Configuration & Free Options
             </CardTitle>
-            <CardDescription className="space-y-2">
-              <p>Your current API key has exceeded its quota. Here are your options:</p>
+            <CardDescription>
+              Configure your AI API for enhanced accuracy. Groq is recommended for fast, free processing.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
